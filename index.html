@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maktab Loyiha Ishi va Konspekt Konstruktori</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #f0f4f8;
+        }
+        .container {
+            display: flex;
+            width: 100%;
+            min-height: 100vh;
+        }
+        /* Chap Forma qismi */
+        .form-section {
+            width: 45%;
+            background: #ffffff;
+            padding: 30px;
+            border-right: 1px solid #cbd5e1;
+            overflow-y: auto;
+            height: 100vh;
+            box-shadow: 4px 0 15px rgba(0,0,0,0.05);
+        }
+        .form-section h2 {
+            color: #4f46e5;
+            margin-bottom: 6px;
+            font-size: 22px;
+        }
+        .form-section p.subtitle {
+            color: #64748b;
+            font-size: 13px;
+            margin-bottom: 20px;
+        }
+        .input-group {
+            margin-bottom: 14px;
+        }
+        .form-row {
+            display: flex;
+            gap: 10px;
+        }
+        .form-row .input-group {
+            flex: 1;
+        }
+        label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: #334155;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 14px;
+            background: #f8fafc;
+        }
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #4f46e5;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        /* Dinamik qo'shiladigan bo'limlar qutisi (Forma ichida) */
+        .dynamic-section-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-left: 4px solid #4f46e5;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            position: relative;
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            gap: 8px;
+        }
+        .card-header span {
+            font-size: 12px;
+            font-weight: bold;
+            color: #4f46e5;
+        }
+        .delete-btn {
+            background: #fee2e2;
+            color: #ef4444;
+            border: none;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .delete-btn:hover {
+            background: #fecaca;
+        }
+        .add-more-btn {
+            width: 100%;
+            padding: 12px;
+            background: #eef2ff;
+            color: #4f46e5;
+            border: 2px dashed #818cf8;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 15px;
+            transition: 0.2s;
+        }
+        .add-more-btn:hover {
+            background: #e0e7ff;
+        }
+
+        .print-btn {
+            width: 100%;
+            padding: 14px;
+            background: #10b981;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .print-btn:hover {
+            background: #059669;
+        }
+
+        /* O'ng Preview qismi (PDF ko'rinishi) */
+        .preview-section {
+            width: 55%;
+            padding: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            overflow-y: auto;
+            height: 100vh;
+        }
+        .cv-page {
+            background: white;
+            width: 210mm;
+            min-height: 297mm;
+            padding: 50px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            border-radius: 12px;
+            border-top: 8px solid #4f46e5;
+        }
+        .badge {
+            display: inline-block;
+            background: #e0e7ff;
+            color: #4f46e5;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+        .cv-page h1 {
+            font-size: 26px;
+            color: #1e293b;
+            margin-bottom: 5px;
+            word-wrap: break-word;
+        }
+        .cv-page h3 {
+            font-size: 15px;
+            color: #64748b;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border: 1px solid #e2e8f0;
+            font-size: 13px;
+            color: #334155;
+        }
+        .info-author {
+            grid-column: span 2;
+        }
+        .cv-block {
+            margin-bottom: 22px;
+            background: #ffffff;
+            border-left: 3px solid #6366f1;
+            padding-left: 15px;
+        }
+        .cv-block h4 {
+            font-size: 15px;
+            color: #1e293b;
+            margin-bottom: 6px;
+            font-weight: 700;
+            word-wrap: break-word;
+        }
+        .cv-block p {
+            font-size: 14px;
+            color: #334155;
+            line-height: 1.7;
+            white-space: pre-line;
+            word-wrap: break-word;
+        }
+        .footer-note {
+            margin-top: 40px;
+            font-size: 12px;
+            color: #94a3b8;
+            text-align: right;
+            border-top: 1px solid #f1f5f9;
+            padding-top: 15px;
+        }
+
+        /* 📱 PLANSHET VA TELEFONLAR UCHUN MOSLASHUVCHANLIK */
+        @media screen and (max-width: 992px) {
+            .container {
+                flex-direction: column;
+                height: auto;
+            }
+            .form-section {
+                width: 100%;
+                height: auto;
+                border-right: none;
+                border-bottom: 2px solid #cbd5e1;
+                padding: 20px;
+            }
+            .preview-section {
+                width: 100%;
+                height: auto;
+                padding: 20px;
+            }
+            .cv-page {
+                width: 100%;
+                min-height: auto;
+                padding: 25px;
+            }
+        }
+
+        /* Kichik telefon ekranlari uchun (480px dan kichik) */
+        @media screen and (max-width: 480px) {
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+            .info-author {
+                grid-column: span 1;
+            }
+            .cv-page {
+                padding: 20px 15px;
+            }
+            .cv-page h1 {
+                font-size: 21px;
+            }
+        }
+
+        /* Chop etish (PDF qilish) rejimi */
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            .preview-section {
+                width: 100%;
+                padding: 0;
+                height: auto;
+            }
+            .cv-page {
+                box-shadow: none;
+                width: 100%;
+                padding: 20px;
+                border-radius: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- CHAP TARAFI: Forma -->
+        <div class="form-section no-print">
+            <h2>🎓 Loyiha Ishi & Konspekt</h2>
+            <p class="subtitle">Mavzu ichidagi tushunchalarni istalgancha qo'shib boring</p>
+            
+            <div class="form-row">
+                <div class="input-group">
+                    <label>Fan nomi:</label>
+                    <select id="inputSubject" onchange="updateStaticInfo()">
+                        <option value="Biologiya">Biologiya</option>
+                        <option value="Kimyo">Kimyo</option>
+                        <option value="Matematika">Matematika</option>
+                        <option value="Fizika">Fizika</option>
+                        <option value="Tarix">Tarix</option>
+                        <option value="O'zbek tili">O'zbek tili</option>
+                        <option value="Informatika">Informatika</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Hujjat turi:</label>
+                    <select id="inputDocType" onchange="updateStaticInfo()">
+                        <option value="O'quvchining Loyiha Ishi">Loyiha ishi</option>
+                        <option value="Dars Konspekti">Dars konspekti</option>
+                        <option value="Mustaqil Ish / Referat">Mustaqil ish / Referat</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>Asosiy Mavzu:</label>
+                <input type="text" id="inputTopic" value="" placeholder="Masalan: Organik moddalar: Uglevodlar" oninput="updateStaticInfo()">
+            </div>
+
+            <div class="form-row">
+                <div class="input-group">
+                    <label>Sinf:</label>
+                    <input type="text" id="inputClass" value="" placeholder="Masalan: 9-«B» sinf" oninput="updateStaticInfo()">
+                </div>
+                <div class="input-group">
+                    <label>Sana:</label>
+                    <input type="text" id="inputDate" value="" placeholder="Masalan: 17-Noyabr, 2026" oninput="updateStaticInfo()">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>Tayyorladi (O'quvchi yoki O'qituvchi F.I.Sh):</label>
+                <input type="text" id="inputAuthor" value="" placeholder="Ismingiz va familiyangiz" oninput="updateStaticInfo()">
+            </div>
+
+            <hr style="margin: 20px 0; border: none; border-top: 1px solid #e2e8f0;">
+            
+            <!-- Dinamik bo'limlar konteyneri -->
+            <div id="sectionsContainer"></div>
+
+            <!-- Yangi tushuncha qo'shish tugmasi -->
+            <button type="button" class="add-more-btn" onclick="addSection()">
+                ➕ Yana yangi tushuncha / bo'lim qo'shish
+            </button>
+
+            <button class="print-btn" onclick="window.print()">📥 PDF qilib yuklab olish</button>
+        </div>
+
+        <!-- O'NG TARAFI: Jonli Ko'rinish (PDF shabloni) -->
+        <div class="preview-section">
+            <div class="cv-page">
+                <span class="badge" id="previewSubject">Biologiya</span>
+                <h1 id="previewTopic">Organik moddalar: Uglevodlar va Yog'lar</h1>
+                <h3 id="previewDocType">O'quvchining Loyiha Ishi</h3>
+
+                <div class="info-grid">
+                    <div><strong>Sinf:</strong> <span id="previewClass">9-«B» sinf</span></div>
+                    <div><strong>Sana:</strong> <span id="previewDate">17-Noyabr, 2026</span></div>
+                    <div class="info-author"><strong>Tayyorladi:</strong> <span id="previewAuthor">Madaminov Odiljon</span></div>
+                </div>
+
+                <!-- Dinamik bo'limlar shu yerga chiqadi -->
+                <div id="previewSectionsContainer"></div>
+
+                <div class="footer-note">
+                    Odiljon Madaminov Fronted Developer.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript qismi -->
+    <script>
+        let sections = [
+            {
+                id: 1,
+                title: "",
+                content: ""
+            },
+            {
+                id: 2,
+                title: "",
+                content: ""
+            }
+        ];
+
+        function updateStaticInfo() {
+            document.getElementById('previewSubject').textContent = document.getElementById('inputSubject').value;
+            document.getElementById('previewDocType').textContent = document.getElementById('inputDocType').value;
+            document.getElementById('previewTopic').textContent = document.getElementById('inputTopic').value || "Mavzu nomi";
+            document.getElementById('previewClass').textContent = document.getElementById('inputClass').value || "-";
+            document.getElementById('previewDate').textContent = document.getElementById('inputDate').value || "-";
+            document.getElementById('previewAuthor').textContent = document.getElementById('inputAuthor').value || "-";
+        }
+
+        function renderSections() {
+            const formContainer = document.getElementById('sectionsContainer');
+            const previewContainer = document.getElementById('previewSectionsContainer');
+
+            formContainer.innerHTML = '';
+            previewContainer.innerHTML = '';
+
+            sections.forEach((sec, index) => {
+                const card = document.createElement('div');
+                card.className = 'dynamic-section-card';
+                card.innerHTML = `
+                    <div class="card-header">
+                        <span>📌 ${index + 1}-BO'LIM / TUSHUNCHA</span>
+                        ${sections.length > 1 ? `<button type="button" class="delete-btn" onclick="removeSection(${sec.id})">O'chirish ✕</button>` : ''}
+                    </div>
+                    <div class="input-group">
+                        <label>Tushuncha nomi (Sarlavha):</label>
+                        <input type="text" value="${sec.title}" oninput="updateSectionData(${sec.id}, 'title', this.value)" placeholder="Masalan: Yog'larning tuzilishi">
+                    </div>
+                    <div class="input-group" style="margin-bottom: 0;">
+                        <label>Batafsil ma'lumot:</label>
+                        <textarea rows="3" oninput="updateSectionData(${sec.id}, 'content', this.value)" placeholder="Shu tushuncha haqida ma'lumot yozing...">${sec.content}</textarea>
+                    </div>
+                `;
+                formContainer.appendChild(card);
+
+                const previewBlock = document.createElement('div');
+                previewBlock.className = 'cv-block';
+                previewBlock.innerHTML = `
+                    <h4>${sec.title || 'Sarlavhasiz bo‘lim'}</h4>
+                    <p>${sec.content || 'Ma’lumot kiritilmagan...'}</p>
+                `;
+                previewContainer.appendChild(previewBlock);
+            });
+        }
+
+        function updateSectionData(id, field, value) {
+            const section = sections.find(s => s.id === id);
+            if (section) {
+                section[field] = value;
+                const previewContainer = document.getElementById('previewSectionsContainer');
+                previewContainer.innerHTML = '';
+                sections.forEach(sec => {
+                    const previewBlock = document.createElement('div');
+                    previewBlock.className = 'cv-block';
+                    previewBlock.innerHTML = `
+                        <h4>${sec.title || 'Sarlavhasiz bo‘lim'}</h4>
+                        <p>${sec.content || 'Ma’lumot kiritilmagan...'}</p>
+                    `;
+                    previewContainer.appendChild(previewBlock);
+                });
+            }
+        }
+
+        function addSection() {
+            const newId = Date.now();
+            const nextNumber = sections.length + 1;
+            sections.push({
+                id: newId,
+                title: `${nextNumber}. Yangi tushuncha nomi`,
+                content: ""
+            });
+            renderSections();
+        }
+
+        function removeSection(id) {
+            sections = sections.filter(s => s.id !== id);
+            renderSections();
+        }
+
+        renderSections();
+    </script>
+</body>
+</html>
